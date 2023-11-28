@@ -102,7 +102,7 @@ const Registration = () => {
                                 <label className="label">
                                     <span className="label-text">Profile</span>
                                 </label>
-                                <input required type="file" accept="image/*"  {...register('profile', { required: true })} className="input input-bordered" />
+                                <input required type="file" accept="image/*"  {...register('profile', { required: true })} className="input" />
                             </div>
                             <div className="form-control">
                                 <label className="label">
