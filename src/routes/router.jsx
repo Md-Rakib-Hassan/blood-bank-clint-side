@@ -5,6 +5,7 @@ import Root from "../Root";
 import Home from "../pages/home/Home";
 import Registration from "../pages/authentication/Registration";
 import Login from "../pages/authentication/Login";
+import SearchDoner from "../pages/SearchDoner";
 
 
   const router = createBrowserRouter([
@@ -23,6 +24,10 @@ import Login from "../pages/authentication/Login";
         {
           path:'login',
           element:<Login></Login>,
+        },
+        {
+          path:'/search-doner',
+          element:<SearchDoner></SearchDoner>
         }
     ]
     

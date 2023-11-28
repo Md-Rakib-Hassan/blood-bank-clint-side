@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { updateProfile } from "firebase/auth";
@@ -7,20 +7,27 @@ import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import axios from "axios";
+import { State, City }  from 'country-state-city';
+
+
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
 
+
+
 const Registration = () => {
     const { register, handleSubmit, reset } = useForm();
+    console.log(State.getStatesOfCountry('BD'));
+    // console.log(City.getCitiesOfState('BD','13'));
 
-    
-
-
+    const axiosPublic = useAxiosPublic();
     const context = useContext(AuthContext)
     const navigate = useNavigate();
 
     const { createUser, auth, logOut } = context;
+
+
 
     const onSubmit = async (data) => {
 
@@ -37,39 +44,54 @@ const Registration = () => {
 
         if (res.data.success) {
             const password = data.password;
-            const email=data.email;
-            const profile= data.display_url;
-            const name=data.name;
-            const user={
+            const email = data.email;
+            const profile = res?.data?.data?.display_url;
+            const name = data.name;
+            const user = {
                 name,
                 email,
                 profile,
                 blood_group: data.blood_group,
+                state:data.state,
+                city:data.city,
+                status: 'active',
+                role: 'donor',
             }
-            
+
+            console.log(profile);
+
             if (password.length < 6) return Swal.fire('Error', `Password is less than 6 characters`, 'error')
-        else if (!/(?=.*[A-Z])/.test(password)) return Swal.fire('Error', `Password don't have a capital letter`, 'error')
-        else if (!/(?=.*\W)/.test(password)) return Swal.fire('Error', `Password don't have a special character`, 'error')
+            else if (!/(?=.*[A-Z])/.test(password)) return Swal.fire('Error', `Password don't have a capital letter`, 'error')
+            else if (!/(?=.*\W)/.test(password)) return Swal.fire('Error', `Password don't have a special character`, 'error')
 
 
-         createUser(email, password)
-            .then(() => {
+            createUser(email, password)
+                .then(() => {
 
-                updateProfile(auth.currentUser, {
-                    displayName: name,
-                    photoURL: profile,
-                }).then(() => {
-                    Swal.fire('Registered', 'You successfully done registration', 'success')
-                    logOut();
-                }).catch((error) => {
+                    updateProfile(auth.currentUser, {
+                        displayName: name,
+                        photoURL: profile,
+                    }).then(() => {
+                        
+                        axiosPublic.post('/users', user)
+                            .then(() => {
+                              
+                                logOut()
+                                navigate('/login');
+                                return Swal.fire('Registered', 'You successfully done registration', 'success')
+                            })
+
+                    }).catch((error) => {
+                        Swal.fire('Error', `${error.message}`, 'error')
+                    });
+
+
+
+                    
+                })
+                .catch((error) => {
                     Swal.fire('Error', `${error.message}`, 'error')
-                });
-
-                navigate('/login');
-            })
-            .catch((error) => {
-                Swal.fire('Error', `${error.message}`, 'error')
-            })
+                })
         }
 
 
@@ -125,6 +147,39 @@ const Registration = () => {
                                     <option>AB-</option>
                                     <option>O+</option>
                                     <option>O-</option>
+                                </select>
+                            </div>
+
+
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">State</span>
+                                </label>
+                                <select {...register('state', { required: true })} className="select input-bordered w-full max-w-xs">
+                                    <option disabled selected>--Select State--</option>
+                                    {
+                                        State.getStatesOfCountry('BD').map((state) =>
+                                        <option   key={state.latitude} >{state.name}</option>
+                                        )
+                                    }
+                                </select>
+                            </div>
+
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text">City</span>
+                                </label>
+                                <select {...register('city', { required: true })} className="select input-bordered  w-full max-w-xs">
+                                    <option disabled selected>--Select City--</option>
+                                    {
+                                       
+                                    
+                                        City.getCitiesOfCountry('BD').map((city) =>
+                                        <option key={city.latitude}>{city.name}</option>
+                                        )
+
+
+                                    }
                                 </select>
                             </div>
 

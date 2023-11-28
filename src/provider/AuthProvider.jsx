@@ -38,27 +38,27 @@ const AuthProvider = ({ children }) => {
             setIsLoding(false);
 
             if(currentUser){
-                axios.post('/auth/access-token',loggedUser)
-                .then(res=>{
+                // axios.post('/auth/access-token',loggedUser)
+                // .then(res=>{
 
                     // Swal.fire('Logged In', 'You successfully done Login', 'success');
                     toast.success('Logged In Success')
               
                     
                    
-                })
-                .catch(err => {
-                    logOut()
+                // })
+                // .catch(err => {
+                //     logOut()
 
-                })
+                // })
             }
 
-            else{
-                axios.post('/auth/logout',loggedUser)
-                .then(res=>{
+            // else{
+            //     axios.post('/auth/logout',loggedUser)
+            //     .then(res=>{
                     
-                })
-            }
+            //     })
+            // }
         });
         return () => {
             return unsubscribe();
