@@ -6,6 +6,10 @@ import Home from "../pages/home/Home";
 import Registration from "../pages/authentication/Registration";
 import Login from "../pages/authentication/Login";
 import SearchDoner from "../pages/SearchDoner";
+import Dashboard from "../pages/layout/Dashboard";
+import DashboardHome from "../pages/layout/dashboard/DashboardHome";
+import MyDonetion from "../pages/layout/dashboard/MyDonetion";
+import CreateDonetion from "../pages/layout/dashboard/CreateDonetion";
 
 
   const router = createBrowserRouter([
@@ -31,6 +35,26 @@ import SearchDoner from "../pages/SearchDoner";
         }
     ]
     
+    },
+
+    {
+      path:'dashboard',
+      element:<Dashboard></Dashboard>,
+      children:[
+        {
+          path:'home',
+          element:<DashboardHome></DashboardHome>
+
+        },
+        {
+          path:'my-donation-requests',
+          element:<MyDonetion></MyDonetion>
+        },
+        {
+          path:'create-donation-request',
+          element:<CreateDonetion></CreateDonetion>
+        }
+      ]
     }
   ])
 
