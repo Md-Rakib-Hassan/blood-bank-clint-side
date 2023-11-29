@@ -1,25 +1,40 @@
 
-import {FaHouseMedical, FaNotesMedical, FaSliders } from "react-icons/fa6";
+import { FaNotesMedical, FaSliders, FaUsers } from "react-icons/fa6";
 import { FaHome } from "react-icons/fa";
 import { NavLink } from 'react-router-dom';
 import { BiSolidDonateBlood } from "react-icons/bi";
 import { ImExit } from "react-icons/im";
+import useUser from "../hooks/useUser";
+import { SiBlogger } from "react-icons/si";
+import { GiDroplets } from "react-icons/gi";
 
 const Sidebar = ({children}) => {
+    const [DBuser]=useUser();
+    const role=DBuser?.role;
 
     const DonerSidebar= <>
     <li><NavLink to={'/dashboard' } end ><a className="flex items-center gap-3"><FaHome></FaHome>Home</a></NavLink></li>
     <li><NavLink to={'/dashboard/my-donation-requests' } end ><a className="flex items-center gap-3"> <BiSolidDonateBlood /> My donation Request</a></NavLink></li>
     <li><NavLink to={'/dashboard/create-donation-request' } end ><a className="flex items-center gap-3">  <FaNotesMedical />Create Donetion Request</a></NavLink></li>
+    {
+        role=='admin' ? <>
+        <li><NavLink to={'/dashboard/all-users' } end ><a className="flex items-center gap-3">  <FaUsers />All Users</a></NavLink></li>
+        
+        </>:''
+    }
+    {
+        role=='admin'||role=='volenteer' ? <>
+        <li><NavLink to={'/dashboard/all-blood-donation-request' } end ><a className="flex items-center gap-3">  <GiDroplets />All Blood Donetion Request</a></NavLink></li>
+
+        <li><NavLink to={'/dashboard/content-management/add-blog' } end ><a className="flex items-center gap-3">  <SiBlogger />Add Blog</a></NavLink></li>
+
+        
+        </>:''
+    }
     <li ><NavLink to={'/' } end ><a className="flex items-center gap-3"> <ImExit />Back to main Page</a></NavLink></li>
     </>
 
-// const VolenteerSidebar= <>
-// <li><NavLink to={'/dashboard' } end ><a className="flex items-center gap-3"><FaHome></FaHome>Home</a></NavLink></li>
-// <li><NavLink to={'/dashboard/my-donation-requests' } end ><a className="flex items-center gap-3"> <BiSolidDonateBlood /> My donation Request</a></NavLink></li>
-// <li><NavLink to={'/dashboard/create-donation-request' } end ><a className="flex items-center gap-3">  <FaNotesMedical />Create Donetion Request</a></NavLink></li>
-// <li ><NavLink to={'/' } end ><a className="flex items-center gap-3"> <ImExit />Back to main Page</a></NavLink></li>
-// </>
+
 
 
 
