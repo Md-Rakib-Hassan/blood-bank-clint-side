@@ -14,6 +14,7 @@ import AllUsers from "../pages/layout/dashboard/AllUsers";
 import AllBloodDonationRequest from "../pages/layout/dashboard/AllBloodDonationRequest";
 import AddBlog from "../pages/layout/dashboard/AddBlog";
 import Profile from "../pages/layout/dashboard/Profile";
+import PrivateRoute from "./PrivateRoute";
 
 
   const router = createBrowserRouter([
@@ -43,7 +44,7 @@ import Profile from "../pages/layout/dashboard/Profile";
 
     {
       path:'dashboard',
-      element:<Dashboard></Dashboard>,
+      element:<PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
       children:[
         {
           path:'home',
