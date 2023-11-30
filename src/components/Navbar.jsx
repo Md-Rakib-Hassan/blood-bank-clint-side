@@ -13,7 +13,6 @@ const Navbar = () => {
     <li><NavLink to={'/donation-req'}>Donation Request</NavLink></li>
     <li> <NavLink to={'/blog'}>Blog</NavLink></li>
     <li> <NavLink to={'/testimonials'}>Donate</NavLink></li>
-    <li> <NavLink to={'/Events-and-Activities'}>Events and Activities</NavLink></li>
     <li> <NavLink to={'/contact-us'}>Contact Us</NavLink></li>
     
     
