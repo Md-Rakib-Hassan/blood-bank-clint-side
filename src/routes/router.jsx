@@ -1,6 +1,6 @@
 import {
-    createBrowserRouter,
-  } from "react-router-dom";
+  createBrowserRouter,
+} from "react-router-dom";
 import Root from "../Root";
 import Home from "../pages/home/Home";
 import Registration from "../pages/authentication/Registration";
@@ -15,68 +15,88 @@ import AllBloodDonationRequest from "../pages/layout/dashboard/AllBloodDonationR
 import AddBlog from "../pages/layout/dashboard/AddBlog";
 import Profile from "../pages/layout/dashboard/Profile";
 import PrivateRoute from "./PrivateRoute";
+import AboutUs from "../pages/AboutUs";
+import ContactUs from "../pages/ContactUs";
+import FAQ from "../pages/FAQ";
+import TermsAndConditions from "../pages/TermsAndConditions";
 
 
-  const router = createBrowserRouter([
+const router = createBrowserRouter([
 
-    {
-    path:'/',
-    element:<Root></Root>,
-    children:[
-        {
-            path:'/',
-            element:<Home></Home>,
-        },{
-            path:'registeration',
-            element:<Registration></Registration>,
-        },
-        {
-          path:'login',
-          element:<Login></Login>,
-        },
-        {
-          path:'/search-doner',
-          element:<SearchDoner></SearchDoner>
-        }
+  {
+    path: '/',
+    element: <Root></Root>,
+    children: [
+      {
+        path: '/',
+        element: <Home></Home>,
+      }, {
+        path: 'registeration',
+        element: <Registration></Registration>,
+      },
+      {
+        path: 'login',
+        element: <Login></Login>,
+      },
+      {
+        path: '/search-doner',
+        element: <SearchDoner></SearchDoner>
+      },
+      {
+        path: '/about-us',
+        element: <AboutUs></AboutUs>
+      },
+      {
+        path: '/contact-us',
+        element: <ContactUs></ContactUs>
+      },
+      {
+        path:'/faqs',
+        element:<FAQ></FAQ>
+      },
+      {
+        path:'/terms-and-conditions',
+        element:<TermsAndConditions></TermsAndConditions>
+      }
     ]
-    
-    },
 
-    {
-      path:'dashboard',
-      element:<PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
-      children:[
-        {
-          path:'home',
-          element:<DashboardHome></DashboardHome>
+  },
 
-        },
-        {
-          path:'my-donation-requests',
-          element:<MyDonetion></MyDonetion>
-        },
-        {
-          path:'create-donation-request',
-          element:<PrivateRoute><CreateDonetion></CreateDonetion></PrivateRoute>
-        },
-        {
-          path:'all-users',
-          element:<AllUsers></AllUsers>
-        },
-        {
-          path:'all-blood-donation-request',
-          element:<AllBloodDonationRequest></AllBloodDonationRequest>
-        },
-        {
-          path:'content-management/add-blog',
-          element:<AddBlog></AddBlog>
-        },
-        {
-          path:'profile',
-          element:<Profile></Profile>
-        }
-      ]
-    }
-  ])
+  {
+    path: 'dashboard',
+    element: <PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
+    children: [
+      {
+        path: 'home',
+        element: <DashboardHome></DashboardHome>
 
-  export default router;
+      },
+      {
+        path: 'my-donation-requests',
+        element: <MyDonetion></MyDonetion>
+      },
+      {
+        path: 'create-donation-request',
+        element: <PrivateRoute><CreateDonetion></CreateDonetion></PrivateRoute>
+      },
+      {
+        path: 'all-users',
+        element: <AllUsers></AllUsers>
+      },
+      {
+        path: 'all-blood-donation-request',
+        element: <AllBloodDonationRequest></AllBloodDonationRequest>
+      },
+      {
+        path: 'content-management/add-blog',
+        element: <AddBlog></AddBlog>
+      },
+      {
+        path: 'profile',
+        element: <Profile></Profile>
+      }
+    ]
+  }
+])
+
+export default router;
