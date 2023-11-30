@@ -59,6 +59,17 @@ const Profile = () => {
 
             console.log(user);
 
+            axiosPublic.put(`/update-profile/${DBuser?._id}`,user)
+            .then(res=>{
+                if(res.data.modifiedCount>0){
+                    
+                    window.location.reload(true);
+                    Swal.fire('Updated','Successfully updated profile','success');
+                }
+            })
+
+            
+
 
     }
 
@@ -91,7 +102,7 @@ const Profile = () => {
                                     <span className="label-text">Blood Group</span>
                                 </label>
                                 <select defaultValue={DBuser?.blood_group} name='blood_group' className="select select-error w-full max-w-xs">
-                                    <option disabled selected>Select One</option>
+                                    <option  >Select One</option>
                                     <option>A+</option>
                                     <option>A-</option>
                                     <option>B+</option>

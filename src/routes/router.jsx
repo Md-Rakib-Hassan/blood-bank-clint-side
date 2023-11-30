@@ -57,7 +57,7 @@ import PrivateRoute from "./PrivateRoute";
         },
         {
           path:'create-donation-request',
-          element:<CreateDonetion></CreateDonetion>
+          element:<PrivateRoute><CreateDonetion></CreateDonetion></PrivateRoute>
         },
         {
           path:'all-users',
