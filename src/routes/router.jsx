@@ -10,6 +10,10 @@ import Dashboard from "../pages/layout/Dashboard";
 import DashboardHome from "../pages/layout/dashboard/DashboardHome";
 import MyDonetion from "../pages/layout/dashboard/MyDonetion";
 import CreateDonetion from "../pages/layout/dashboard/CreateDonetion";
+import AllUsers from "../pages/layout/dashboard/AllUsers";
+import AllBloodDonationRequest from "../pages/layout/dashboard/AllBloodDonationRequest";
+import AddBlog from "../pages/layout/dashboard/AddBlog";
+import Profile from "../pages/layout/dashboard/Profile";
 
 
   const router = createBrowserRouter([
@@ -53,6 +57,22 @@ import CreateDonetion from "../pages/layout/dashboard/CreateDonetion";
         {
           path:'create-donation-request',
           element:<CreateDonetion></CreateDonetion>
+        },
+        {
+          path:'all-users',
+          element:<AllUsers></AllUsers>
+        },
+        {
+          path:'all-blood-donation-request',
+          element:<AllBloodDonationRequest></AllBloodDonationRequest>
+        },
+        {
+          path:'content-management/add-blog',
+          element:<AddBlog></AddBlog>
+        },
+        {
+          path:'profile',
+          element:<Profile></Profile>
         }
       ]
     }

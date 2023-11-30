@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { updateProfile } from "firebase/auth";
@@ -7,7 +7,6 @@ import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import axios from "axios";
-import { State, City }  from 'country-state-city';
 
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
@@ -17,16 +16,30 @@ const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_ke
 
 
 const Registration = () => {
-    const { register, handleSubmit, reset } = useForm();
-    console.log(State.getStatesOfCountry('BD'));
-    // console.log(City.getCitiesOfState('BD','13'));
+    const axiosPublic=useAxiosPublic();
+    const { register, handleSubmit, reset,watch,resetField } = useForm();
+    const [districts,setDistricts]=useState([]);
+    const [upazilas,setUpazilas]=useState([]);
 
-    const axiosPublic = useAxiosPublic();
     const context = useContext(AuthContext)
     const navigate = useNavigate();
+    const watchDistrict=watch('district')
+    const districtCode=watchDistrict ? watchDistrict.split(","):'';
+    // console.log(districtCode);
+
 
     const { createUser, auth, logOut } = context;
+    useEffect(() => {
+        axiosPublic.get('/districts')
+        .then(res=>setDistricts(res.data));
+    },[axiosPublic])
 
+    useEffect(() => {
+        // resetField('upazilas');
+        axiosPublic.get(`/upazilas/${districtCode[0]}`)
+        .then(res=>setUpazilas(res.data));
+    },[axiosPublic,districtCode])
+    
 
 
     const onSubmit = async (data) => {
@@ -47,13 +60,21 @@ const Registration = () => {
             const email = data.email;
             const profile = res?.data?.data?.display_url;
             const name = data.name;
+            const upazila=data.upazila;
+            // console.log(upazila);
+            if(!upazila){
+            // console.log('inside if',upazila);
+
+                return Swal.fire('Error', `Select an upazila`, 'error');
+                
+            }
             const user = {
                 name,
                 email,
                 profile,
                 blood_group: data.blood_group,
-                state:data.state,
-                city:data.city,
+                district:districtCode[1],
+                upazila:upazila,
                 status: 'active',
                 role: 'donor',
             }
@@ -153,13 +174,13 @@ const Registration = () => {
 
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text">State</span>
+                                    <span className="label-text">District</span>
                                 </label>
-                                <select {...register('state', { required: true })} className="select input-bordered w-full max-w-xs">
-                                    <option disabled selected>--Select State--</option>
+                                <select {...register('district', { required: true })} className="select input-bordered w-full max-w-xs">
+                                    <option disabled selected>--Select districts--</option>
                                     {
-                                        State.getStatesOfCountry('BD').map((state) =>
-                                        <option   key={state.latitude} >{state.name}</option>
+                                        districts.map((district) =>
+                                        <option   key={district.name} value={`${district.id},${district.name}` } >{district.name}</option>
                                         )
                                     }
                                 </select>
@@ -167,15 +188,15 @@ const Registration = () => {
 
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text">City</span>
+                                    <span className="label-text">Upazilas</span>
                                 </label>
-                                <select {...register('city', { required: true })} className="select input-bordered  w-full max-w-xs">
-                                    <option disabled selected>--Select City--</option>
+                                <select {...register('upazila', { required: true })} className="select input-bordered  w-full max-w-xs">
+                                    <option value={''}  selected>--Select upazila--</option>
                                     {
                                        
                                     
-                                        City.getCitiesOfCountry('BD').map((city) =>
-                                        <option key={city.latitude}>{city.name}</option>
+                                        upazilas.map((upazilaa) =>
+                                        <option key={upazilaa.name}>{upazilaa.name}</option>
                                         )
 
 

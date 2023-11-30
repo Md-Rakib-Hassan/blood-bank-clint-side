@@ -1,24 +1,36 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-
-import { AuthContext } from "../provider/AuthProvider";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
 import useAxiosPublic from "../hooks/useAxiosPublic";
-import { State, City }  from 'country-state-city';
+
 
 
 const SearchDoner = () => {
 
-    const { register, handleSubmit, reset } = useForm();
-    console.log(State.getStatesOfCountry('BD'));
+    const { register, handleSubmit, reset,watch } = useForm();
     // console.log(City.getCitiesOfState('BD','13'));
     const [doners,setDoners]=useState([]);
 
     const axiosPublic = useAxiosPublic();
-    const context = useContext(AuthContext)
-    const navigate = useNavigate();
+   
+
+    const [districts,setDistricts]=useState([]);
+    const [upazilas,setUpazilas]=useState([]);
+
+    const watchDistrict=watch('district')
+    const districtCode=watchDistrict ? watchDistrict.split(","):'';
+
+    useEffect(() => {
+      axiosPublic.get('/districts')
+      .then(res=>setDistricts(res.data));
+  },[axiosPublic])
+
+  useEffect(() => {
+      // resetField('upazilas');
+      axiosPublic.get(`/upazilas/${districtCode[0]}`)
+      .then(res=>setUpazilas(res.data));
+  },[axiosPublic,districtCode])
 
  
 
@@ -29,18 +41,18 @@ const SearchDoner = () => {
          
             const email = data.email;
             const blood_group= data.blood_group
-            const state=data.state
-            const city=data.city
+            const district=data.district
+            const upazila=data.upazila
             let search_query ='';
 
 
             if(email)search_query+=`email=${email}`
             if(blood_group)search_query+=`&blood_group=${blood_group}`
-            if(state)search_query+=`&state=${state}`;
-            if(city)search_query+=`&city=${city}`
+            if(district)search_query+=`&district=${district}`;
+            if(upazila)search_query+=`&upazila=${upazila}`
             console.log(search_query);
 
-            axiosPublic.get(`/search-doner?${search_query}`)
+            axiosPublic.get(`/search-doner?role=donor&${search_query}`)
             .then(res=>setDoners(res.data));
 
            
@@ -90,13 +102,13 @@ const SearchDoner = () => {
 
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text">Search by State</span>
+                                    <span className="label-text">District</span>
                                 </label>
-                                <select {...register('state')} className="select input-bordered w-full max-w-xs">
-                                    <option  value={''} selected>--Select State--</option>
+                                <select {...register('district', { required: true })} className="select input-bordered w-full max-w-xs">
+                                    <option disabled selected>--Select districts--</option>
                                     {
-                                        State.getStatesOfCountry('BD').map((state) =>
-                                        <option   key={state.latitude} >{state.name}</option>
+                                        districts.map((district) =>
+                                        <option   key={district.name} value={`${district.id},${district.name}` } >{district.name}</option>
                                         )
                                     }
                                 </select>
@@ -104,21 +116,22 @@ const SearchDoner = () => {
 
                             <div className="form-control">
                                 <label className="label">
-                                    <span className="label-text">Search by City</span>
+                                    <span className="label-text">Upazilas</span>
                                 </label>
-                                <select {...register('city')} className="select input-bordered  w-full max-w-xs">
-                                    <option  value={''} selected>--Select City--</option>
+                                <select {...register('upazila', { required: true })} className="select input-bordered  w-full max-w-xs">
+                                    <option value={''}  selected>--Select upazila--</option>
                                     {
                                        
                                     
-                                        City.getCitiesOfCountry('BD').map((city) =>
-                                        <option key={city.latitude}>{city.name}</option>
+                                        upazilas.map((upazilaa) =>
+                                        <option key={upazilaa.name}>{upazilaa.name}</option>
                                         )
 
 
                                     }
                                 </select>
                             </div>
+
 
                           
                             <div className="form-control mt-6">
@@ -140,7 +153,7 @@ const SearchDoner = () => {
       <tr>
        
         <th className="text-center">Name</th>
-        <th >City</th>
+        <th >upazila</th>
 
         <th >Blood Group</th>
         <th>Role</th>
@@ -162,12 +175,12 @@ const SearchDoner = () => {
                 </div>
                 <div>
                   <div className="font-bold">{doner.name}</div>
-                  <div className="text-sm opacity-50">{doner.state}</div>
+                  <div className="text-sm opacity-50">{doner.district}</div>
                 </div>
               </div>
             </td>
             <td>
-              {doner.city}
+              {doner.upazila}
             </td>
             <td>
               {doner.blood_group}
