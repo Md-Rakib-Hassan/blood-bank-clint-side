@@ -3,32 +3,23 @@ import useUser from '../../../hooks/useUser';
 import { AuthContext } from '../../../provider/AuthProvider';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
 import { useForm } from 'react-hook-form';
+import Swal from 'sweetalert2';
 
 const CreateDonetion = () => {
-    const { user } = useContext(AuthContext);
-    const [DBuser] = useUser();
-    // console.log(DBuser);
-    const [formData, setFormData] = useState({
-        requesterName: `${user?.displayName}`,
-        requesterEmail: `${user?.email}`,
-        recipientName: '',
-        recipientDistrict: '',
-        recipientUpazila: '',
-        hospitalName: '',
-        fullAddress: '',
-        blood_group: '',
-        donationDate: '',
-        donationTime: '',
-        requestMessage: '',
-    });
 
+    
     const axiosPublic = useAxiosPublic();
     const { register, watch, } = useForm();
     const [districts, setDistricts] = useState([]);
     const [upazilas, setUpazilas] = useState([]);
+    const { user } = useContext(AuthContext);
+    const [DBuser] = useUser();
+    // console.log(DBuser);
+ 
 
-    const watchDistrict = watch('district')
-    const districtCode = watchDistrict ? watchDistrict.split(",") : '';
+
+    // const watchDistrict = watch('district');
+    // const districtCode = watchDistrict ? watchDistrict.split(",") : '';
 
     useEffect(() => {
         axiosPublic.get('/districts')
@@ -36,10 +27,10 @@ const CreateDonetion = () => {
     }, [axiosPublic])
 
     useEffect(() => {
-        // resetField('upazilas');
-        axiosPublic.get(`/upazilas/${districtCode[0]}`)
+        // resetField('upazilas') /${districtCode[0]};
+        axiosPublic.get(`/upazilas`)
             .then(res => setUpazilas(res.data));
-    }, [axiosPublic, districtCode])
+    }, [axiosPublic])
 
 
 
@@ -57,9 +48,17 @@ const CreateDonetion = () => {
             blood_group:e.target.blood_group.value,
             donationDate:e.target.donationDate.value,
             donationTime:e.target.donationTime.value,
-            requestMessage:e.target.requestMessage.value
+            requestMessage:e.target.requestMessage.value,
+            status:'pending'
         }
         console.log(donationInfo);
+
+        axiosPublic.post('/donetion-req', donationInfo)
+        .then(() => {
+            e.target.reset();
+            return Swal.fire('Requested', 'You successfully post the Request', 'success')
+        })
+
     };
     return (
         <div className="max-w-xl mx-auto mt-8 p-6 bg-white shadow-md rounded-md">
@@ -69,7 +68,7 @@ const CreateDonetion = () => {
                     <input
                         type="text"
                         className="form-input border border-gray-300 rounded-md mt-1 w-full"
-                        value={formData?.requesterName}
+                        value={user?.displayName}
                         readOnly
                         name='requesterName'
                     />
@@ -79,7 +78,7 @@ const CreateDonetion = () => {
                     <label className="block text-sm font-bold text-gray-700">Requester Email</label>
                     <input
                         type="text"
-                        value={formData?.requesterEmail}
+                        value={user?.email}
                         className="form-input border border-gray-300 rounded-md mt-1 w-full"
                         readOnly
                         name='requesterEmail'
@@ -102,7 +101,7 @@ const CreateDonetion = () => {
                         <option selected disabled value={''} >--Select districts--</option>
                         {
                             districts.map((district) =>
-                                <option key={district.name} value={`${district.id},${district.name}`} >{district.name}</option>
+                                <option key={district.name} >{district.name}</option>
                             )
                         }
                     </select>
@@ -136,8 +135,8 @@ const CreateDonetion = () => {
 
                 <div className="mb-4">
                     <label className="block text-sm font-bold text-gray-700">Blood Group</label>
-                    <select defaultValue={DBuser?.blood_group} name='blood_group' className="select select-error w-full max-w-xs">
-                        <option  >Select One</option>
+                    <select required name='blood_group' className="select select-error w-full max-w-xs">
+                        <option selected disabled value={''}  >Select One</option>
                         <option>A+</option>
                         <option>A-</option>
                         <option>B+</option>

@@ -2,11 +2,104 @@ import React, { useState } from 'react';
 import useAxiosPublic from '../../../hooks/useAxiosPublic';
 import { FaEllipsis } from "react-icons/fa6";
 import toast from 'react-hot-toast';
+import Swal from 'sweetalert2';
+import { useEffect } from 'react';
 const AllUsers = () => {
     const [doners, setDoners] = useState([]);
     const axiosPublic = useAxiosPublic();
-    axiosPublic.get(`/search-doner`)
-        .then(res => setDoners(res.data));
+   
+
+        useEffect(()=>{
+            axiosPublic.get(`/search-doner`)
+            .then(res => setDoners(res.data));
+        },[axiosPublic]);
+
+
+        const changeRole=(rl,id)=>{
+
+            
+            Swal.fire({
+                title: "Are you sure?",
+                text: `You won't revert your changes`,
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes"
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  
+                  axiosPublic.put(`/update-role/${id}`,{role:rl})
+                  .then(res => {
+                      window.location.reload();
+                      return Swal.fire('Success', 'You successfully change the role', 'success')
+              
+                  });
+              
+                }
+              });
+    
+    
+    
+            }
+
+
+            const changeStatus=(rl,id)=>{
+
+            
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: `You want to ${rl} the user!!!`,
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes"
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      
+                      axiosPublic.put(`/status/${id}`,{status:rl})
+                      .then(res => {
+                          window.location.reload();
+                          return Swal.fire('Success', `You successfully ${rl} the user.`, 'success')
+                  
+                      });
+                  
+                    }
+                  });
+        
+        
+        
+                }
+
+
+                const deletUser=(id)=>{
+
+            
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: `You want to delete the user!!!`,
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes"
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                          
+                          axiosPublic.delete(`/users/delete/${id}`)
+                          .then(res => {
+                              window.location.reload();
+                              return Swal.fire('Success', `You successfully delete the user.`, 'success')
+                      
+                          });
+                      
+                        }
+                      });
+            
+            
+            
+                    }
+
+
+        
     return (
         <div>
 
@@ -54,19 +147,25 @@ const AllUsers = () => {
                                         {doner.blood_group}
                                     </td>
                                     <td>{doner.role}</td>
-                                    <th className="text-green-600">
-                                        {doner.status}
+                                    <th className={`${doner?.status=='active'?'text-green-600':'text-red-600'}`}>
+                                        {doner?.status}
                                     </th>
                                     <td><div className="dropdown">
-                                        <div tabIndex={0} role="button"><FaEllipsis /></div>
+                                        <div  tabIndex={0} role="button"><FaEllipsis /></div>
                                         <ul className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box">
-                                            {doner.role == 'donor' && <><li><a>Make volunteer</a></li>
-                                                <li><a>Make admin</a></li>
-                                                <li><a>Delete User</a></li></>}
+                                            {doner.role == 'donor' && <>
+                                                <li><button onClick={()=>changeRole('volunteer',doner?._id)}>Make volunteer</button></li>
+                                                <li><button onClick={()=>changeRole('admin',doner?._id)}>Make admin</button></li>
+                                                <li><button onClick={()=>changeStatus(`${doner?.status=='active'?'block':'active'}`,doner?._id)}>{doner?.status=='active'?'Block':'Unblock'} User</button></li>
+                                                <li><button onClick={()=>deletUser(doner?._id)}>Delete User</button></li>
+                                                </>}
                                             {doner.role == 'volunteer' && <>
-                                                <li><a>Make admin</a></li>
-                                                <li><a>Delete User</a></li>
+                                            <li><button onClick={()=>changeRole('admin',doner?._id)}>Make admin</button></li>
+                                                <li><button onClick={()=>changeStatus(`${doner?.status=='active'?'block':'active'}`,doner?._id)}>{doner?.status=='active'?'Block':'Unblock'} User</button></li>
+                                                <li><button onClick={()=>deletUser(doner?._id)}>Delete User</button></li>
                                             </>}
+
+                                           
                                            
 
                                         </ul>

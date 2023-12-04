@@ -19,6 +19,13 @@ import AboutUs from "../pages/AboutUs";
 import ContactUs from "../pages/ContactUs";
 import FAQ from "../pages/FAQ";
 import TermsAndConditions from "../pages/TermsAndConditions";
+import ContentManagement from "../pages/layout/dashboard/ContentManagement";
+import Blog from "../pages/Blog";
+import FullBlog from "../pages/FullBlog";
+import DonationRequest from "../pages/DonationRequest";
+import DonationDetails from "../pages/DonetionDetails";
+import Donate from "../pages/Donate";
+import Error from "../pages/Error"
 
 
 const router = createBrowserRouter([
@@ -26,6 +33,7 @@ const router = createBrowserRouter([
   {
     path: '/',
     element: <Root></Root>,
+    errorElement:<Error></Error>,
     children: [
       {
         path: '/',
@@ -57,6 +65,26 @@ const router = createBrowserRouter([
       {
         path:'/terms-and-conditions',
         element:<TermsAndConditions></TermsAndConditions>
+      },
+      {
+        path:'/blog',
+        element:<Blog></Blog>
+      },
+      {
+        path:'/blog/:id',
+        element:<FullBlog></FullBlog>
+      },
+      {
+        path:'/donation-req',
+        element:<DonationRequest></DonationRequest>
+      },
+      {
+        path:'/donation-req/:id',
+        element:<PrivateRoute><DonationDetails></DonationDetails></PrivateRoute>
+        
+      },{
+        path:'/donate',
+        element:<Donate></Donate>
       }
     ]
 
@@ -67,7 +95,7 @@ const router = createBrowserRouter([
     element: <PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
     children: [
       {
-        path: 'home',
+        path: '',
         element: <DashboardHome></DashboardHome>
 
       },
@@ -94,6 +122,10 @@ const router = createBrowserRouter([
       {
         path: 'profile',
         element: <Profile></Profile>
+      },
+      {
+        path:'content-management',
+        element:<ContentManagement></ContentManagement>
       }
     ]
   }

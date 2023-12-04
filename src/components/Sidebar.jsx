@@ -28,7 +28,7 @@ const Sidebar = ({ children }) => {
             role == 'admin' || role == 'volenteer' ? <>
                 <li><NavLink to={'/dashboard/all-blood-donation-request'} end ><a className="flex items-center gap-3">  <GiDroplets />All Blood Donetion Request</a></NavLink></li>
 
-                <li><NavLink to={'/dashboard/content-management/add-blog'} end ><a className="flex items-center gap-3">  <SiBlogger />Add Blog</a></NavLink></li>
+                <li><NavLink to={'/dashboard/content-management'} end ><a className="flex items-center gap-3">  <SiBlogger />Content Management</a></NavLink></li>
 
 
             </> : ''
@@ -45,9 +45,12 @@ const Sidebar = ({ children }) => {
 
             <div className="drawer lg:drawer-open">
                 <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-                <div className="drawer-content">
+                <div className="drawer-content relative">
                     {children}
-                    <label htmlFor="my-drawer-2" className=" drawer-button lg:hidden text-2xl p-4"><FaSliders /></label>
+                   
+                    <label htmlFor="my-drawer-2" className=" absolute top-0 drawer-button lg:hidden text-2xl p-4"><FaSliders /></label>
+                    
+                    
 
 
                 </div>

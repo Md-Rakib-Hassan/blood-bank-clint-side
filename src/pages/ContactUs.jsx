@@ -45,11 +45,6 @@ const ContactUs = () => {
     
     return (
         <div className='w-3/4 mx-auto space-y-3 mt-16 py-8'>
-              <Helmet>
-                <meta charSet="utf-8" />
-                <title>BookHotel | Contact Us</title>
-
-            </Helmet>
             <div className='mt-10'>
 
             <div className='mb-10'>

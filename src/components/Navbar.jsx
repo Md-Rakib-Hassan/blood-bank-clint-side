@@ -9,11 +9,11 @@ const Navbar = () => {
     const { user, logOut } = context;
   
   const navElement = <>
-    <li><NavLink to={'/'}>Home</NavLink></li>
-    <li><NavLink to={'/donation-req'}>Donation Request</NavLink></li>
-    <li> <NavLink to={'/blog'}>Blog</NavLink></li>
-    <li> <NavLink to={'/testimonials'}>Donate</NavLink></li>
-    <li> <NavLink to={'/contact-us'}>Contact Us</NavLink></li>
+    <li><NavLink to={'/'} end>Home</NavLink></li>
+    <li><NavLink to={'/donation-req'} end>Donation Request</NavLink></li>
+    <li> <NavLink to={'/blog'} end>Blog</NavLink></li>
+    <li> <NavLink to={'/donate'} end>Donate</NavLink></li>
+    <li> <NavLink to={'/contact-us'} end>Contact Us</NavLink></li>
     
     
   </>
