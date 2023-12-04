@@ -26,6 +26,7 @@ import DonationRequest from "../pages/DonationRequest";
 import DonationDetails from "../pages/DonetionDetails";
 import Donate from "../pages/Donate";
 import Error from "../pages/Error"
+import BlockedUser from "./BlockedUser";
 
 
 const router = createBrowserRouter([
@@ -105,7 +106,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'create-donation-request',
-        element: <PrivateRoute><CreateDonetion></CreateDonetion></PrivateRoute>
+        element: <BlockedUser><PrivateRoute><CreateDonetion></CreateDonetion></PrivateRoute></BlockedUser>
       },
       {
         path: 'all-users',
